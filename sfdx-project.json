@@ -1,0 +1,12 @@
+{
+  "packageDirectories": [
+    {
+      "path": "salesforce_sfdx",
+      "default": true
+    }
+  ],
+  "name": "Salesforce Industries Utils",
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "52.0"
+}
