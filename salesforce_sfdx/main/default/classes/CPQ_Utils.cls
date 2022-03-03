@@ -6,7 +6,6 @@ Purpose: Holds reusable resources for CPQ classes.
 *****************************************************************/
 
 public class CPQ_Utils {
-    public static final String 	CLASS_NAME =  CPQ_Utilities.class.getName();
     public static final String 	CACHE_NAMESPACE =  'local';
     public static final String 	CACHE_PARTITION_NAME =  'CPQDefaultPartition';
     public static final String 	CACHE_KEY_VALUE =  'cpqStringTranslationsMap';
