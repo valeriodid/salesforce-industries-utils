@@ -14,6 +14,36 @@ public class CPQ_Utils {
     public static final String 	CHILD_PRODUCTS_JSON_NODE =  'childProducts';
     public static final String 	ATTRIBUTE_DROPDOWN_TYPE =  'Dropdown';
 
+    /* Set of child products custom fields returned by the API */
+    private static Set<String> childProductFields = new Set<String>{
+		'actions',
+		'displaySequence',
+		'Product2',
+		'Name',
+		'Id',
+		'Product2Id',
+		'IsActive',
+		'ProductCode',
+		'Pricebook2Id',
+		'PricebookEntry',
+		'productId',
+		'defaultQuantity',
+		'minQuantity',
+		'maxQuantity',
+		'groupMinQuantity',
+		'groupMaxQuantity',
+		'sequenceNumber',
+		'productChildItemDefinition',
+		'productHierarchyPath',   
+		'name',
+		'isVirtualItem',
+		'hasChildren',
+		'orderActive',
+		'itemType',
+		'SellingPeriod',
+		'quantity'
+    };
+
     /*****************************************************************
     Method Name: doManipulateItems
     Method Description: Handle fields for API response
