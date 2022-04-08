@@ -4,13 +4,12 @@ global with sharing class CustomCpqAppHandlerHookImplementation implements vloci
         try{            
             if(methodName == 'getCartsItems.PostInvoke'){
                 CPQ_Utils.doTranslations((vlocity_cmt.JSONResult)output.get('result'));
+                CPQ_Utils.doManipulateItems((vlocity_cmt.JSONResult)output.get('result'));
             }
             else if(methodName == 'postCartsItems.PostInvoke') {
                 CPQ_Utils.doTranslations((vlocity_cmt.JSONResult)output.get('result'));
             }
-
-			return true;
-
+            return true;
         }
         catch (Exception ex){
             System.debug('EXCEPTION: CustomCpqAppHandlerHookImplementation -> invokeMethod --- MESSAGE:' + ex.getMessage() + ' STACK TRACE: ' + ex.getStackTraceString());

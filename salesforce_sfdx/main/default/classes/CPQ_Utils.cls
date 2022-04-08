@@ -15,17 +15,128 @@ public class CPQ_Utils {
     public static final String 	ATTRIBUTE_DROPDOWN_TYPE =  'Dropdown';
 
     /*****************************************************************
+    Method Name: doManipulateItems
+    Method Description: Handle fields for API response
+    *****************************************************************/
+    public static void doManipulateItems(vlocity_cmt.JSONResult result){
+        for(vlocity_cmt.JSONRecord rec : result.records) {
+            hideUnnecessaryFieldsFromRecord(rec);
+
+            if(rec.nameResult != null && (rec.nameResult).containsKey(LINE_ITEMS_JSON_NODE)){
+                doManipulateItemsRecursive(rec.nameResult.get(LINE_ITEMS_JSON_NODE).records);
+            }
+
+            if(rec.nameResult != null && (rec.nameResult).containsKey('productGroups')){
+                doManipulateItemsRecursive(rec.nameResult.get('productGroups').records);
+            }
+
+            if(rec.nameResult != null && (rec.nameResult).containsKey(CHILD_PRODUCTS_JSON_NODE)){
+                doManipulateItemsRecursive(rec.nameResult.get(CHILD_PRODUCTS_JSON_NODE).records);
+            }
+        }
+    }
+
+    /*****************************************************************
+    Method Name: doManipulateItemsRecursive
+    Method Description: Recursive method for Handle fields for API response
+    *****************************************************************/
+    public static void doManipulateItemsRecursive(List<vlocity_cmt.JSONRecord> xItems){
+        for(vlocity_cmt.JSONRecord rec : xItems) {
+            hideUnnecessaryFieldsFromRecord(rec);
+
+            if(rec.nameResult != null && (rec.nameResult).containsKey(LINE_ITEMS_JSON_NODE)){
+                doManipulateItemsRecursive(rec.nameResult.get(LINE_ITEMS_JSON_NODE).records);
+            }
+    
+            if(rec.nameResult != null && (rec.nameResult).containsKey(PRODUCT_GROUPS_JSON_NODE)){
+                doManipulateItemsRecursive(rec.nameResult.get(PRODUCT_GROUPS_JSON_NODE).records);
+            }
+    
+            if(rec.nameResult != null && (rec.nameResult).containsKey(CHILD_PRODUCTS_JSON_NODE)){
+                doManipulateItemsRecursive(rec.nameResult.get(CHILD_PRODUCTS_JSON_NODE).records);
+            }
+        }
+    }
+
+    /*****************************************************************
+    Method Name: hideUnnecessaryFieldsFromRecord
+    Method Description: Remove all unnecessary fields from item record
+    *****************************************************************/
+    private static void hideUnnecessaryFieldsFromRecord(vlocity_cmt.JSONRecord rec){
+        if(rec.fields.containsKey('itemType') && (String)rec.fields.get('itemType') == 'childProduct'){
+            for (String fieldName : rec.fields.keySet()){
+                if(!childProductFields.contains(fieldName) && rec.fields.containsKey(fieldName)) rec.fields.remove(fieldName);
+            }
+        }
+    }
+
+    /*****************************************************************
+    Method Name: doCatalogTranslations
+    Method Description: Translations for Catalog and Child Catalogs Names
+    *****************************************************************/
+    public static void doCatalogTranslations(List<Object> response){
+        if(response.size() > 0){
+            String userLocale = 'en_US';
+            if(!String.isBlank(UserInfo.getLocale())){
+                userLocale = UserInfo.getLocale();
+            }
+            userLocale = userLocale.replace('_', '');
+
+            Cache.OrgPartition orgCPQPart = Cache.Org.getPartition(CACHE_NAMESPACE+'.'+CACHE_PARTITION_NAME);
+            Map<String,Object> mapStringTranslation = new Map<String,Object>();
+
+            if(orgCPQPart != null && orgCPQPart.contains(userLocale+CACHE_KEY_VALUE)){
+                mapStringTranslation = (Map<String,Object>)JSON.deserializeUntyped((String)orgCPQPart.get(userLocale+CACHE_KEY_VALUE));
+            }
+            else{
+                List<vlocity_cmt__StringTranslation__c> stringTranslationsList = [SELECT vlocity_cmt__StringId__r.Name, vlocity_cmt__Translation__c 
+                    FROM vlocity_cmt__StringTranslation__c
+                    WHERE vlocity_cmt__LocaleCode__c =: UserInfo.getLocale() AND vlocity_cmt__IsTranslated__c = true
+                ];
+        
+                for(vlocity_cmt__StringTranslation__c translationRecord : stringTranslationsList){
+                    mapStringTranslation.put(translationRecord.vlocity_cmt__StringId__r.Name,translationRecord.vlocity_cmt__Translation__c);
+                }
+                orgCPQPart.put(userLocale+CACHE_KEY_VALUE, JSON.serialize(mapStringTranslation));
+            }
+
+            for(Object catalog : response) {
+                Map<String,Object> mapObj = (Map<String,Object>) catalog;
+                if(mapStringTranslation.containsKey((String)mapObj.get('catalogName'))){
+                    mapObj.put('Name',(String)mapStringTranslation.get((String)mapObj.get('catalogName')));
+                }
+
+                if(mapObj.containsKey('childCatalogs')){
+                    Map<String,Object> childCatalogs = (Map<String,Object>)mapObj.get('childCatalogs');
+                    if(childCatalogs.containsKey('records')){
+                        for(Object childCatalog : (List<Object>)childCatalogs.get('records')) {
+                            Map<String,Object> mapChildObj = (Map<String,Object>) childCatalog;
+                            if(mapStringTranslation.containsKey((String)mapChildObj.get('catalogName'))){
+                                mapChildObj.put('Name',(String)mapStringTranslation.get((String)mapChildObj.get('catalogName')));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /*****************************************************************
     Method Name: doTranslations
     Method Description: Translations for Product Name and Attributes
     *****************************************************************/
     public static void doTranslations(vlocity_cmt.JSONResult result){
-        String namespace = CACHE_NAMESPACE;
-        String partName = CACHE_PARTITION_NAME;
-        Cache.OrgPartition orgCPQPart = Cache.Org.getPartition(namespace+'.'+partName);
+        String userLocale = 'en_US';
+        if(!String.isBlank(UserInfo.getLocale())){
+            userLocale = UserInfo.getLocale();
+        }
+        userLocale = userLocale.replace('_', '');
+
+        Cache.OrgPartition orgCPQPart = Cache.Org.getPartition(CACHE_NAMESPACE+'.'+CACHE_PARTITION_NAME);
         Map<String,Object> mapStringTranslation = new Map<String,Object>();
 
-        if(orgCPQPart != null && orgCPQPart.contains(CACHE_KEY_VALUE)){
-            mapStringTranslation = (Map<String,Object>)JSON.deserializeUntyped((String)orgCPQPart.get(CACHE_KEY_VALUE));
+        if(orgCPQPart != null && orgCPQPart.contains(userLocale+CACHE_KEY_VALUE)){
+            mapStringTranslation = (Map<String,Object>)JSON.deserializeUntyped((String)orgCPQPart.get(userLocale+CACHE_KEY_VALUE));
         }
         else{
             List<vlocity_cmt__StringTranslation__c> stringTranslationsList = [SELECT vlocity_cmt__StringId__r.Name, vlocity_cmt__Translation__c 
@@ -36,7 +147,7 @@ public class CPQ_Utils {
             for(vlocity_cmt__StringTranslation__c translationRecord : stringTranslationsList){
                 mapStringTranslation.put(translationRecord.vlocity_cmt__StringId__r.Name,translationRecord.vlocity_cmt__Translation__c);
             }
-            orgCPQPart.put(CACHE_KEY_VALUE, JSON.serialize(mapStringTranslation));
+            orgCPQPart.put(userLocale+CACHE_KEY_VALUE, JSON.serialize(mapStringTranslation));
         }
 
         for(vlocity_cmt.JSONRecord rec : result.records) {
