@@ -52,15 +52,15 @@ public class CPQ_Utils {
         for(vlocity_cmt.JSONRecord rec : result.records) {
             hideUnnecessaryFieldsFromRecord(rec);
 
-            if(rec.nameResult != null && (rec.nameResult).containsKey(LINE_ITEMS_JSON_NODE)){
+            if(rec.nameResult != null && (rec.nameResult).containsKey(LINE_ITEMS_JSON_NODE) && (rec.nameResult).get(LINE_ITEMS_JSON_NODE) != null){
                 doManipulateItemsRecursive(rec.nameResult.get(LINE_ITEMS_JSON_NODE).records);
             }
 
-            if(rec.nameResult != null && (rec.nameResult).containsKey('productGroups')){
-                doManipulateItemsRecursive(rec.nameResult.get('productGroups').records);
+            if(rec.nameResult != null && (rec.nameResult).containsKey(PRODUCT_GROUPS_JSON_NODE) && (rec.nameResult).get(PRODUCT_GROUPS_JSON_NODE) != null){
+                doManipulateItemsRecursive(rec.nameResult.get(PRODUCT_GROUPS_JSON_NODE).records);
             }
 
-            if(rec.nameResult != null && (rec.nameResult).containsKey(CHILD_PRODUCTS_JSON_NODE)){
+            if(rec.nameResult != null && (rec.nameResult).containsKey(CHILD_PRODUCTS_JSON_NODE) && (rec.nameResult).get(CHILD_PRODUCTS_JSON_NODE) != null){
                 doManipulateItemsRecursive(rec.nameResult.get(CHILD_PRODUCTS_JSON_NODE).records);
             }
         }
@@ -74,15 +74,15 @@ public class CPQ_Utils {
         for(vlocity_cmt.JSONRecord rec : xItems) {
             hideUnnecessaryFieldsFromRecord(rec);
 
-            if(rec.nameResult != null && (rec.nameResult).containsKey(LINE_ITEMS_JSON_NODE)){
+            if(rec.nameResult != null && (rec.nameResult).containsKey(LINE_ITEMS_JSON_NODE) && (rec.nameResult).get(LINE_ITEMS_JSON_NODE) != null){
                 doManipulateItemsRecursive(rec.nameResult.get(LINE_ITEMS_JSON_NODE).records);
             }
-    
-            if(rec.nameResult != null && (rec.nameResult).containsKey(PRODUCT_GROUPS_JSON_NODE)){
+
+            if(rec.nameResult != null && (rec.nameResult).containsKey(PRODUCT_GROUPS_JSON_NODE) && (rec.nameResult).get(PRODUCT_GROUPS_JSON_NODE) != null){
                 doManipulateItemsRecursive(rec.nameResult.get(PRODUCT_GROUPS_JSON_NODE).records);
             }
-    
-            if(rec.nameResult != null && (rec.nameResult).containsKey(CHILD_PRODUCTS_JSON_NODE)){
+
+            if(rec.nameResult != null && (rec.nameResult).containsKey(CHILD_PRODUCTS_JSON_NODE) && (rec.nameResult).get(CHILD_PRODUCTS_JSON_NODE) != null){
                 doManipulateItemsRecursive(rec.nameResult.get(CHILD_PRODUCTS_JSON_NODE).records);
             }
         }
@@ -188,16 +188,16 @@ public class CPQ_Utils {
             if(rec.nameResult != null && (rec.nameResult).containsKey(ATTRIBUTE_CATEGORIES)){
                 doTranslationAttributes(mapStringTranslation,rec.nameResult.get(ATTRIBUTE_CATEGORIES).records);
             }
-
-            if(rec.nameResult != null && (rec.nameResult).containsKey(LINE_ITEMS_JSON_NODE)){
+    
+            if(rec.nameResult != null && (rec.nameResult).containsKey(LINE_ITEMS_JSON_NODE) && (rec.nameResult).get(LINE_ITEMS_JSON_NODE) != null){
                 doTranslationRecursive(mapStringTranslation, rec.nameResult.get(LINE_ITEMS_JSON_NODE).records);
             }
 
-            if(rec.nameResult != null && (rec.nameResult).containsKey(PRODUCT_GROUPS_JSON_NODE)){
+            if(rec.nameResult != null && (rec.nameResult).containsKey(PRODUCT_GROUPS_JSON_NODE) && (rec.nameResult).get(PRODUCT_GROUPS_JSON_NODE) != null){
                 doTranslationRecursive(mapStringTranslation, rec.nameResult.get(PRODUCT_GROUPS_JSON_NODE).records);
             }
 
-            if(rec.nameResult != null && (rec.nameResult).containsKey(CHILD_PRODUCTS_JSON_NODE)){
+            if(rec.nameResult != null && (rec.nameResult).containsKey(CHILD_PRODUCTS_JSON_NODE) && (rec.nameResult).get(CHILD_PRODUCTS_JSON_NODE) != null){
                 doTranslationRecursive(mapStringTranslation, rec.nameResult.get(CHILD_PRODUCTS_JSON_NODE).records);
             }
         }
@@ -218,15 +218,15 @@ public class CPQ_Utils {
                     doTranslationAttributes(mapStringTranslation,rec.nameResult.get(ATTRIBUTE_CATEGORIES).records);
                 }
 
-                if(rec.nameResult != null && (rec.nameResult).containsKey(LINE_ITEMS_JSON_NODE)){
+                if(rec.nameResult != null && (rec.nameResult).containsKey(LINE_ITEMS_JSON_NODE) && (rec.nameResult).get(LINE_ITEMS_JSON_NODE) != null){
                     doTranslationRecursive(mapStringTranslation, rec.nameResult.get(LINE_ITEMS_JSON_NODE).records);
                 }
-
-                if(rec.nameResult != null && (rec.nameResult).containsKey(PRODUCT_GROUPS_JSON_NODE)){
+    
+                if(rec.nameResult != null && (rec.nameResult).containsKey(PRODUCT_GROUPS_JSON_NODE) && (rec.nameResult).get(PRODUCT_GROUPS_JSON_NODE) != null){
                     doTranslationRecursive(mapStringTranslation, rec.nameResult.get(PRODUCT_GROUPS_JSON_NODE).records);
                 }
     
-                if(rec.nameResult != null && (rec.nameResult).containsKey(CHILD_PRODUCTS_JSON_NODE)){
+                if(rec.nameResult != null && (rec.nameResult).containsKey(CHILD_PRODUCTS_JSON_NODE) && (rec.nameResult).get(CHILD_PRODUCTS_JSON_NODE) != null){
                     doTranslationRecursive(mapStringTranslation, rec.nameResult.get(CHILD_PRODUCTS_JSON_NODE).records);
                 }
             }
